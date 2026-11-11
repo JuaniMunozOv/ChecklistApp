@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ChecklistRootView: View {
+public struct ChecklistRootView: View {
     @State private var checklistViewModel = ChecklistViewModel(
         catalog: LocalTestCatalogRepository(),
         finalizeUseCase: FinalizeChecklistUseCase(
@@ -10,7 +10,9 @@ struct ChecklistRootView: View {
         haptics: ImpactHapticFeedbackProvider()
     )
 
-    var body: some View {
+    public init() {}
+
+    public var body: some View {
         ChecklistView(viewModel: checklistViewModel)
     }
 }
