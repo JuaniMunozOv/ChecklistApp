@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vista previa · iPad mini 6</title>
+<!--
+  Réplica visual aproximada de ChecklistView en iPad mini (6.ª gen.): 744 × 1133 pt.
+  No ejecuta el código Swift: si cambia la UI en SwiftUI, hay que actualizar este archivo.
+  El catálogo replica App/Data/Local/TestCatalog.swift.
+-->
+<style>
+  :root { --bg:#F2F2F7; --cell:#FFF; --label:#000; --secondary:rgba(60,60,67,.6); --separator:rgba(60,60,67,.29);
+          --fill:rgba(118,118,128,.12); --seg-on:#FFF; --red:#FF3B30; --green:#34C759; --blue:#007AFF; --blue-soft:rgba(0,122,255,.15); }
+  .dark { --bg:#000; --cell:#1C1C1E; --label:#FFF; --secondary:rgba(235,235,245,.6); --separator:rgba(84,84,88,.6);
+          --fill:rgba(118,118,128,.24); --seg-on:#636366; --red:#FF453A; --green:#30D158; --blue:#0A84FF; --blue-soft:rgba(10,132,255,.25); }
+  * { box-sizing:border-box; margin:0; }
+  body { font-family:-apple-system,"SF Pro Text","Inter","Helvetica Neue",sans-serif; background:#2b2b2e; color:#eee;
+         display:flex; flex-direction:column; align-items:center; padding:16px; gap:16px; }
+  .controls { display:flex; gap:16px; flex-wrap:wrap; justify-content:center; font-size:13px; }
+  .controls fieldset { border:1px solid #555; border-radius:8px; padding:6px 10px; display:flex; gap:10px; }
+  .controls legend { padding:0 4px; color:#aaa; }
+  .stage { position:relative; }
+  .device { position:absolute; top:0; left:0; background:#111; border-radius:44px; padding:18px; transform-origin:top left; }
+  .screen { width:744px; height:1133px; border-radius:26px; overflow:hidden; background:var(--bg); color:var(--label);
+            display:flex; flex-direction:column; position:relative; font-size:17px; }
+  .landscape .screen { width:1133px; height:744px; }
+  .status { height:24px; padding:0 22px; display:flex; justify-content:space-between; align-items:center; font-size:13px; font-weight:600; }
+  .nav h1 { font-size:34px; font-weight:700; padding:6px 20px 4px; }
+  .scroll { flex:1; overflow-y:auto; padding-bottom:30px; }
+  .section { margin:22px 20px 0; }
+  .sh { font-size:13px; color:var(--secondary); text-transform:uppercase; padding:0 20px 7px; display:flex; justify-content:space-between; }
+  .sf { font-size:13px; color:var(--secondary); padding:7px 20px 0; }
+  .group { background:var(--cell); border-radius:10px; overflow:hidden; }
+  .row { display:flex; align-items:center; gap:12px; padding:0 20px; min-height:44px; position:relative; }
+  .row + .row::before { content:""; position:absolute; top:0; left:20px; right:0; border-top:.5px solid var(--separator); }
+  .row input[type=text] { flex:1; border:0; background:transparent; font:inherit; color:var(--label); outline:none; height:44px; }
+  .row input::placeholder { color:var(--secondary); opacity:.7; }
+  .muted { color:var(--secondary); margin-left:auto; }
+  .seg { flex:1; display:flex; background:var(--fill); border-radius:9px; padding:2px; margin:8px 0; }
+  .seg button { flex:1; height:28px; border:0; background:transparent; color:var(--label); font:inherit; font-size:13px; border-radius:7px; cursor:pointer; }
+  .seg button.on { background:var(--seg-on); font-weight:600; }
+  .chips { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px; padding:12px 20px; }
+  .chip { display:flex; align-items:center; gap:8px; padding:12px; border-radius:10px; border:0; background:var(--fill);
+          color:var(--label); font:inherit; font-size:16px; cursor:pointer; text-align:left; }
+  .chip.on { background:var(--blue-soft); }
+  .chip .dot { color:var(--secondary); } .chip.on .dot { color:var(--blue); }
+  .item { cursor:pointer; flex:1; display:flex; align-items:center; gap:12px; min-height:44px; }
+  .item.miss { color:var(--red); }
+  .ico { width:24px; height:24px; flex:none; }
+  .scanner { position:absolute; inset:24px 0 0; background:#000; display:none; flex-direction:column; z-index:10; }
+  .scanner.show { display:flex; }
+  .camera { flex:1; position:relative; display:flex; align-items:center; justify-content:center; background:#1a1a1a; }
+  .reticle { width:60%; height:140px; border:3px solid rgba(255,255,255,.85); border-radius:14px; }
+  .sim { position:absolute; bottom:20px; left:20px; right:20px; }
+  .sim input { width:100%; height:44px; border-radius:10px; border:0; padding:0 14px; font:inherit; font-size:15px; }
+  .banner { background:var(--cell); padding:16px 20px 26px; display:flex; flex-direction:column; align-items:center; gap:10px; color:var(--label); }
+  .banner progress { width:100%; height:6px; accent-color:var(--blue); }
+  .banner span { font-size:15px; color:var(--secondary); }
+  .code { margin-left:auto; font:13px ui-monospace,"SF Mono",Menlo,monospace; color:var(--secondary); }
+  .link { color:var(--blue); background:none; border:0; font:inherit; cursor:pointer; padding:0; }
+  .link:disabled { color:var(--secondary); opacity:.5; cursor:default; }
+  .primary { width:100%; justify-content:center; font-weight:600; }
+  .sig-preview { background:#fff; border-radius:8px; margin:8px 0; height:110px; width:100%; object-fit:contain; }
+  .overlay { position:absolute; inset:0; background:rgba(0,0,0,.35); display:none; align-items:flex-end; justify-content:center; }
+  .overlay.show { display:flex; }
+  .sheet { background:var(--bg); width:100%; max-width:620px; border-radius:14px 14px 0 0; padding:0 20px 24px; }
+  .sheet-bar { display:flex; justify-content:space-between; align-items:center; height:52px; }
+  .sheet-bar strong { font-size:17px; }
+  .pad { background:#fff; border-radius:12px; border:.5px solid var(--separator); width:100%; height:280px; touch-action:none; cursor:crosshair; display:block; }
+  .done { text-align:center; padding:30px 10px 10px; display:flex; flex-direction:column; align-items:center; gap:10px; }
+  .done h2 { font-size:22px; } .done p { color:var(--secondary); font-size:15px; } .done code { font-size:14px; }
+  .btn { border:0; border-radius:10px; padding:10px 16px; font:inherit; font-size:16px; cursor:pointer; }
+  .btn.fill { background:var(--blue); color:#fff; } .btn.tint { background:var(--blue-soft); color:var(--blue); }
+  .alert { position:absolute; inset:0; background:rgba(0,0,0,.3); display:none; align-items:center; justify-content:center; }
+  .alert.show { display:flex; }
+  .alert div { background:var(--cell); width:270px; border-radius:14px; text-align:center; overflow:hidden; }
+  .alert h3 { font-size:17px; padding:18px 16px 4px; } .alert p { font-size:13px; padding:0 16px 18px; }
+  .alert button { width:100%; border:0; border-top:.5px solid var(--separator); background:none; height:44px; color:var(--blue); font:inherit; font-weight:600; cursor:pointer; }
+</style>
+</head>
+<body>
+  <div class="controls">
+    <fieldset><legend>Orientación</legend>
+      <label><input type="radio" name="orient" value="portrait" checked> Vertical</label>
+      <label><input type="radio" name="orient" value="landscape"> Horizontal</label>
+    </fieldset>
+    <fieldset><legend>Apariencia</legend>
+      <label><input type="radio" name="theme" value="light" checked> Clara</label>
+      <label><input type="radio" name="theme" value="dark"> Oscura</label>
+    </fieldset>
+  </div>
+
+  <div class="stage"><div class="device" id="device"><div class="screen" id="screen">
+    <div class="status"><span>9:41</span><span>100 %</span></div>
+    <div class="nav" style="display:flex;align-items:flex-end;justify-content:space-between;padding-right:20px">
+      <h1>Check-list de ensayos</h1><button class="link" id="scanBtn" style="padding-bottom:10px" disabled>▥ Escanear</button></div>
+    <div class="scanner" id="scanner">
+      <div class="sheet-bar" style="padding:0 20px;background:var(--bg)"><span></span><strong>Escanear elementos</strong><button class="link" id="scanDone">Listo</button></div>
+      <div class="camera"><div class="reticle"></div>
+        <div class="sim"><input type="text" id="scanInput" placeholder="Simular lectura: escribí un código (ej. DCP-01) y Enter"></div></div>
+      <div class="banner"><strong id="scanMsg">Apuntá la cámara al código de un elemento</strong>
+        <progress id="scanProg" value="0" max="1"></progress><span id="scanCount"></span></div>
+    </div>
+    <div class="scroll" id="form"></div>
+    <div class="overlay" id="sigOverlay"><div class="sheet">
+      <div class="sheet-bar"><button class="link" id="sigCancel">Cancelar</button><strong>Firma</strong><button class="link" id="sigSave" disabled>Guardar</button></div>
+      <canvas class="pad" id="pad" width="1160" height="560"></canvas>
+      <p class="sf" id="sigHint" style="text-align:center"></p>
+      <p style="text-align:center;padding-top:12px"><button class="link" id="sigClear" style="color:var(--red)">Borrar</button></p>
+    </div></div>
+    <div class="overlay" id="doneOverlay"><div class="sheet"><div class="done" id="done"></div></div></div>
+    <div class="alert" id="alert"><div><h3>No se pudo completar</h3><p id="alertMsg"></p><button id="alertOk">Aceptar</button></div></div>
+  </div></div></div>
+
+<script>
+const PREFIX = { sandCone:"CYA", plateLoad:"PDC", dcp:"DCP", cbr:"CBR", proctorT99:"T99", proctorT180:"T180", granulometry:"GRA", atterbergLimits:"ATT", laboratory:"LAB" };
+const TESTS = [
+  ["sandCone","Cono y Arena",["Cono","Placa base","Punta","Maza","Pincel","Bolsa","Arena","Rodilleras","Planillas","Cuchara"]],
+  ["plateLoad","Placa de Carga",["Placa de carga","Gato","Mangueras","Planillas","Regla","Flexímetro","Manómetro","Aceite"]],
+  ["dcp","DCP",["Pesa","Varilla","Manija","Regla","Planillas","Pinzas"]],
+  ["cbr","CBR",["Molde","Vástago","Pesas","Prensa","Trípode","Flexímetro","Balde p/agua"]],
+  ["proctorT99","Proctor T99",["Molde T99","Pisón T99"]],
+  ["proctorT180","Proctor T180",["Molde T180","Pisón T180"]],
+  ["granulometry","Granulometría",['Tamiz 3"','Tamiz 2"','Tamiz 1 1/2"','Tamiz 1"','Tamiz 3/4"','Tamiz 3/8"',"Tamiz Nº4","Tamiz Nº10","Tamiz Nº16","Tamiz Nº40","Tamiz Nº100","Tamiz Nº200"]],
+  ["atterbergLimits","Límites de Atterberg",["Casagrande","Acanalador","Vidrio esmerilado"]],
+  ["laboratory","Elementos de Laboratorio",["Balanza 30 kg (0,1 g)","Balanza 300 g (0,01 g)","Espátula","Bandejas","Cucharón","Horno","Bolsas","Gancho p/balanza","Canasto p/peso esp."]]
+];
+const OK = '<svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="var(--green)"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const MISS = '<svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10.2" fill="none" stroke="var(--red)" stroke-width="1.6"/></svg>';
+let uid = 0;
+const S = { movement:"outbound", project:"", destination:"", preparedBy:"", companions:"", sections:[], signature:null };
+const $ = id => document.getElementById(id);
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const clean = s => s.replace(/[\u0000-\u001F\u007F]/g, "").split(/\s+/).filter(Boolean).join(" ").slice(0, 120);
+const allItems = () => S.sections.flatMap(s => s.items);
+
+function itemRow(it) {
+  return `<div class="row"><div class="item ${it.ok ? "" : "miss"}" data-toggle="${it.id}">${it.ok ? OK : MISS}<span>${esc(it.name)}</span>
+    <span class="code">▥ ${it.code}</span></div></div>`;
+}
+function field(key, label, prompt) {
+  return `<div class="row"><span style="flex:none">${label}</span><input type="text" style="text-align:right" data-field="${key}" placeholder="${prompt}" value="${esc(S[key])}"></div>`;
+}
+function render() {
+  const date = new Date().toLocaleDateString("es-AR", { day:"numeric", month:"long", year:"numeric" });
+  const selected = new Set(S.sections.map(s => s.key));
+  let html = `<div class="section"><div class="sh">Datos generales</div><div class="group">
+    <div class="row"><div class="seg">${[["outbound","Salida"],["inbound","Regreso"]].map(([k,t]) =>
+      `<button data-move="${k}" class="${S.movement===k?"on":""}">${t}</button>`).join("")}</div></div>
+    <div class="row">Fecha<span class="muted">${date}</span></div>
+    ${field("project","Proyecto","Nombre del proyecto")}${field("destination","Destino","Lugar de trabajo")}${field("preparedBy","Elaborado por","Nombre y apellido")}${field("companions","Acompañantes","Opcional")}
+  </div></div>
+  <div class="section"><div class="sh">Ensayos</div><div class="group"><div class="chips">${TESTS.map(([k,t]) =>
+    `<button class="chip ${selected.has(k)?"on":""}" data-test="${k}"><span class="dot">${selected.has(k)?"●":"○"}</span>${t}</button>`).join("")}</div></div>
+    <div class="sf">Elegí uno o más ensayos para ver los elementos que hay que cargar.</div></div>`;
+  for (const s of S.sections) {
+    const done = s.items.filter(i => i.ok).length;
+    const missing = s.items.length - done;
+    const status = missing === 0 ? "Completo" : `Faltan ${missing}`;
+    html += `<div class="section"><div class="sh"><span>${s.title}</span><span style="${missing ? "color:var(--red)" : ""}">${status}</span></div><div class="group">${s.items.map(itemRow).join("")}</div></div>`;
+  }
+  html += `<div class="section"><div class="sh">Firma de quien elabora</div><div class="group"><div class="row" style="flex-direction:column;align-items:flex-start;padding:6px 20px">
+    ${S.signature ? `<img class="sig-preview" src="${S.signature}" alt="Firma"><button class="link" id="sign" style="height:36px">Volver a firmar</button>`
+                  : `<button class="link" id="sign" style="height:32px">✍︎ Firmar</button>`}</div></div></div>
+  <div class="section"><div class="group"><div class="row"><button class="link primary" id="finalize" ${allItems().length ? "" : "disabled"}>Finalizar y generar PDF</button></div></div>
+    <div class="sf">El PDF se guarda con la fecha en Archivos › En mi iPad › Checklist › Checklists.</div></div>`;
+  const scroll = $("form").scrollTop;
+  $("form").innerHTML = html;
+  $("form").scrollTop = scroll;
+  $("scanBtn").disabled = !S.sections.length;
+  const done = allItems().filter(i => i.ok).length, total = allItems().length;
+  $("scanProg").max = Math.max(total, 1); $("scanProg").value = done;
+  $("scanCount").textContent = `${done} de ${total} elementos controlados`;
+}
+
+let lastScan = null;
+function scan(raw) {
+  const key = raw.trim().toUpperCase(), now = Date.now();
+  if (lastScan && lastScan.key === key && now - lastScan.at < 2000) return;
+  lastScan = { key, at: now };
+  const msg = (text, color) => { $("scanMsg").textContent = text; $("scanMsg").style.color = color; };
+  if (!/^[A-Z0-9-]{3,32}$/.test(key)) return msg("⚠ Código no reconocido", "var(--red)");
+  const section = S.sections.find(s => s.items.some(i => i.code === key));
+  if (!section) return msg(`✕ El código ${key} no pertenece a los ensayos elegidos`, "var(--red)");
+  const item = section.items.find(i => i.code === key);
+  if (item.ok) return msg(`✓ ${item.name} ya estaba controlado`, "#FF9500");
+  item.ok = true; msg(`✓ ${item.name} · ${section.title}`, "var(--green)"); render();
+}
+$("scanBtn").onclick = () => { lastScan = null; $("scanMsg").textContent = "Apuntá la cámara al código de un elemento"; $("scanMsg").style.color = ""; $("scanner").classList.add("show"); $("scanInput").focus(); };
+$("scanDone").onclick = () => $("scanner").classList.remove("show");
+$("scanInput").addEventListener("keydown", e => { if (e.key === "Enter") { scan(e.target.value); e.target.value = ""; } });
+
+function findItem(id) { return allItems().find(i => i.id === +id); }
+function showError(msg) { $("alertMsg").textContent = msg; $("alert").classList.add("show"); }
+
+$("form").addEventListener("input", e => { const k = e.target.dataset.field; if (k) S[k] = e.target.value; });
+$("form").addEventListener("click", e => {
+  const t = e.target.closest("button, [data-toggle]"); if (!t) return;
+  const d = t.dataset;
+  if (d.move) { S.movement = d.move; render(); }
+  else if (d.test) {
+    const i = S.sections.findIndex(s => s.key === d.test);
+    if (i >= 0) S.sections.splice(i, 1);
+    else { const [k, title, names] = TESTS.find(x => x[0] === d.test);
+      S.sections.push({ key:k, title, items:names.map((n, i) => ({ id:++uid, name:n, code:`${PREFIX[k]}-${String(i + 1).padStart(2, "0")}`, ok:false })) });
+      S.sections.sort((a, b) => TESTS.findIndex(x => x[0]===a.key) - TESTS.findIndex(x => x[0]===b.key)); }
+    render();
+  }
+  else if (d.toggle) { const it = findItem(d.toggle); it.ok = !it.ok; render(); }
+  else if (t.id === "sign") openPad();
+  else if (t.id === "finalize") finalize();
+});
+
+function finalize() {
+  if (!clean(S.project)) return showError("Completá el nombre del proyecto.");
+  if (!clean(S.preparedBy)) return showError("Completá quién elabora el checklist.");
+  if (!allItems().length) return showError("Elegí al menos un ensayo.");
+  if (!S.signature) return showError("Falta la firma de quien elabora el checklist.");
+  const d = new Date(), p = n => String(n).padStart(2, "0");
+  const slug = clean(S.project).normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40);
+  const move = S.movement === "outbound" ? "Salida" : "Regreso";
+  const file = `Checklist_${move}_${slug}_${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}.pdf`;
+  $("done").innerHTML = `<h2>✓ Checklist de ${move.toLowerCase()} generado</h2><code>${esc(file)}</code>
+    <p>Guardado en Archivos › En mi iPad › Checklist › Checklists</p>
+    <button class="btn fill">Enviar o compartir PDF</button>
+    ${S.movement === "outbound" ? '<button class="btn tint" id="doReturn">Preparar checklist de regreso</button>' : ""}
+    <button class="link" id="doNew">Nuevo checklist</button>`;
+  $("doneOverlay").classList.add("show");
+}
+$("done").addEventListener("click", e => {
+  if (e.target.id === "doReturn") { S.movement = "inbound"; allItems().forEach(i => i.ok = false); S.signature = null; }
+  else if (e.target.id === "doNew") Object.assign(S, { movement:"outbound", project:"", destination:"", companions:"", sections:[], signature:null });
+  else return;
+  $("doneOverlay").classList.remove("show"); $("form").scrollTop = 0; render();
+});
+$("alertOk").onclick = () => $("alert").classList.remove("show");
+
+const pad = $("pad"), ctx = pad.getContext("2d");
+let drawing = false, strokes = 0;
+function openPad() { ctx.clearRect(0, 0, pad.width, pad.height); strokes = 0; $("sigSave").disabled = true;
+  $("sigHint").textContent = clean(S.preparedBy) ? `Firma de ${clean(S.preparedBy)}` : "Firmá dentro del recuadro"; $("sigOverlay").classList.add("show"); }
+function point(e) { const r = pad.getBoundingClientRect(); return [(e.clientX - r.left) * pad.width / r.width, (e.clientY - r.top) * pad.height / r.height]; }
+pad.addEventListener("pointerdown", e => { drawing = true; pad.setPointerCapture(e.pointerId); ctx.beginPath(); ctx.moveTo(...point(e)); });
+pad.addEventListener("pointermove", e => { if (!drawing) return; ctx.lineWidth = 6; ctx.lineCap = "round"; ctx.strokeStyle = "#000"; ctx.lineTo(...point(e)); ctx.stroke(); });
+pad.addEventListener("pointerup", () => { if (drawing) { drawing = false; strokes++; $("sigSave").disabled = false; } });
+$("sigClear").onclick = () => { ctx.clearRect(0, 0, pad.width, pad.height); strokes = 0; $("sigSave").disabled = true; };
+$("sigCancel").onclick = () => $("sigOverlay").classList.remove("show");
+$("sigSave").onclick = () => { S.signature = pad.toDataURL("image/png"); $("sigOverlay").classList.remove("show"); render(); };
+
+function fit() {
+  const landscape = document.querySelector('input[name="orient"]:checked').value === "landscape";
+  document.body.classList.toggle("landscape", landscape);
+  const w = (landscape ? 1133 : 744) + 36, h = (landscape ? 744 : 1133) + 36;
+  const stage = document.querySelector(".stage");
+  const top = stage.getBoundingClientRect().top + window.scrollY;
+  const scale = Math.min(1, (window.innerWidth - 32) / w, Math.max(0.3, (window.innerHeight - top - 16) / h));
+  stage.style.width = `${w * scale}px`; stage.style.height = `${h * scale}px`;
+  $("device").style.transform = `scale(${scale})`;
+}
+document.querySelectorAll('input[name="orient"]').forEach(i => i.onchange = fit);
+document.querySelectorAll('input[name="theme"]').forEach(i => i.onchange = () => $("screen").classList.toggle("dark", i.value === "dark"));
+window.addEventListener("resize", fit);
+render(); fit();
+</script>
+</body>
+</html>
